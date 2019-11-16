@@ -134,13 +134,6 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/about/">About</a>
                         </li>
                         
@@ -149,6 +142,13 @@
                         
                         <li>
                             <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -208,6 +208,48 @@
             
                 <!-- Main Content -->
 
+
+<div class="post-preview">
+
+    <a href="/article/StatefulSet搭建mongoDB/">
+        <h2 class="post-title">
+                                 
+            StatefulSet搭建mongoDB
+        </h2>
+        <h3 class="post-subtitle">
+            “使用sts完成mongodb搭建”
+        </h3>
+        <div class="post-content-preview">
+            
+本文将实战使用sts搭建一个多节点高可用的mongodb实例
+
+
+使用sts部署集群mongodb
+
+
+前提条件：需要确保在Kubernetes集群中管理员已经创建好共享存储，并能够与StorageClass对接，以实现动态存储供应的模式
+
+
+需要的yaml
+
+一个StorageClass，用于StatefulSet自动为各个应用Pod申请PVC
+一个Headless Service，用于......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by 陈俊 on
+            2019-11-14
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#kubernetes权威指南" title="kubernetes权威指南">kubernetes权威指南</a>
+            
+        </div>
+    
+
+</div>
+<hr>
 
 <div class="post-preview">
 
@@ -420,11 +462,11 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
     <div class="tags">
         
             
-            <a href="/tags/#Hexo" title="Hexo" rel="2">Hexo</a>
+            <a href="/tags/#kubernetes权威指南" title="kubernetes权威指南" rel="4">kubernetes权威指南</a>
             
         
             
-            <a href="/tags/#kubernetes权威指南" title="kubernetes权威指南" rel="3">kubernetes权威指南</a>
+            <a href="/tags/#Hexo" title="Hexo" rel="2">Hexo</a>
             
         
     </div>
@@ -480,6 +522,10 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
     <ul>
       
         <li>
+          <a href="/article/StatefulSet搭建mongoDB/">StatefulSet搭建mongoDB</a>
+        </li>
+      
+        <li>
           <a href="/article/深入浅出pod使用（三）/">深入浅出pod使用（三）</a>
         </li>
       
@@ -493,10 +539,6 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
       
         <li>
           <a href="/article/二进制部署kubernetes（一）/">二进制部署kubernetes（一）</a>
-        </li>
-      
-        <li>
-          <a href="/article/初识ingress-1/">初识ingress</a>
         </li>
       
     </ul>
@@ -523,7 +565,7 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li></ul>
     </div>
 
         <hr>
