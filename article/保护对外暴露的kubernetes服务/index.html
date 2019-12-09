@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          StatefulSet搭建mongoDB - 陈俊 | Blog
+          保护对外暴露的kubernetes服务 - 陈俊 | Blog
         
     </title>
 
-    <link rel="canonical" href="https://jaydenchen.github.io/article/StatefulSet搭建mongoDB/">
+    <link rel="canonical" href="https://jaydenchen.github.io/article/保护对外暴露的kubernetes服务/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,14 +88,18 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#kubernetes权威指南" title="kubernetes权威指南">kubernetes权威指南</a>
+                              <a class="tag" href="/tags/#ingress" title="ingress">ingress</a>
+                            
+                              <a class="tag" href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
+                            
+                              <a class="tag" href="/tags/#work" title="work">work</a>
                             
                         </div>
-                        <h1>StatefulSet搭建mongoDB</h1>
-                        <h2 class="subheading">“使用sts完成mongodb搭建”</h2>
+                        <h1>保护对外暴露的kubernetes服务</h1>
+                        <h2 class="subheading">使用basic auth认证进行服务对保护</h2>
                         <span class="meta">
                             Posted by 陈俊 on
-                            2019-11-14
+                            2019-12-09
                         </span>
                     </div>
                 
@@ -213,58 +217,24 @@
                 post-container">
 
                 <blockquote>
-<p>本文将实战使用sts搭建一个多节点高可用的mongodb实例<br>
-<img src="/img/mongodb.png" alt="mongodb架构图"></p>
+<p>我们在使用kubernetes经常会暴露一些没有安全验证机制的服务，我们想通过域名进行访问的时候就带有安全机制本文就讲介绍一下kubernetes的认证</p>
 </blockquote>
-<h2 id="使用sts部署集群mongodb">使用sts部署集群mongodb</h2>
+<h2 id="basic-auth认证">basic auth认证</h2>
+<p>首先要创建一个储存用户名和密码的htpasswd文件：</p>
 <ul>
-<li>
-<p>前提条件：需要确保在Kubernetes集群中管理员已经创建好共享存储，并能够与StorageClass对接，以实现动态存储供应的模式</p>
-</li>
-<li>
-<p>需要的yaml</p>
+<li>如果没有安装工具先使用<code>yum install httpd</code>安装一下</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> htpasswd -bc auth admin 123456</span><br><span class="line">Adding password for user admin</span><br></pre></td></tr></table></figure>
 <ul>
-<li>一个StorageClass，用于StatefulSet自动为各个应用Pod申请PVC</li>
-<li>一个Headless Service，用于维护MongoDB集群的状态</li>
-<li>一个StatefulSet</li>
+<li>然后使用上面的htpasswd文件创建一个secret对象</li>
 </ul>
-</li>
-<li>
-<p>StorageClass</p>
-</li>
-</ul>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"> apiVersion:</span> <span class="string">storage.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StorageClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">fast</span></span><br><span class="line"><span class="attr">provisioner:</span> <span class="string">kubernetes.io/glusterfs</span></span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line"><span class="attr">  resturl:</span> <span class="string">"http://&lt;heketi-rest-url&gt;"</span></span><br></pre></td></tr></table></figure>
-<p>mongo-sidecar作为MongoDB集群的管理者，将使用此Headless Service来维护各个MongoDB实例之间的集群关系，以及集群规模变化时的自动更新</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> kubectl create secret generic flink-auth --from-file=auth -n test</span><br><span class="line">secret "flink-auth" created</span><br></pre></td></tr></table></figure>
 <ul>
-<li>Headless Service</li>
+<li>然后在ingress中添加注解</li>
 </ul>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"> apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - port:</span> <span class="number">27017</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">27017</span></span><br><span class="line"><span class="attr">  clusterIP:</span> <span class="string">None</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    role:</span> <span class="string">mongo</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>StatefulSet</li>
-</ul>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr"> apiVersion:</span> <span class="string">apps/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  serviceName:</span> <span class="string">"mongo"</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        role:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">        environment:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      terminationGracePeriodSeconds:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">        command:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">mongod</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"--replSet"</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">rs0</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"--smallfiles"</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"--noprealloc"</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">27017</span></span><br><span class="line"><span class="attr">        volumeMounts:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">mongo-persistent-storage</span></span><br><span class="line"><span class="attr">          mountPath:</span> <span class="string">/data/db</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">mongo-sidecar</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">cvallance/mongo-k8s-sidecar</span></span><br><span class="line"><span class="attr">        env:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">MONGO_SIDECAR_POD_LABELS</span></span><br><span class="line"><span class="attr">          value:</span> <span class="string">"role=mongo,environment=test"</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">KUBERNETES_MONGO_SERVICE_NAME</span></span><br><span class="line"><span class="attr">          value:</span> <span class="string">"mongo"</span></span><br><span class="line"><span class="attr">  volumeClaimTemplates:</span></span><br><span class="line"><span class="attr">  - metadata:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">mongo-persistent-storage</span></span><br><span class="line"><span class="attr">      annotations:</span></span><br><span class="line">        <span class="string">volume.beta.kubernetes.io/storage-class:</span> <span class="string">"fast"</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      accessModes:</span> <span class="string">[</span> <span class="string">"ReadWriteOnce"</span> <span class="string">]</span></span><br><span class="line"><span class="attr">      resources:</span></span><br><span class="line"><span class="attr">        requests:</span></span><br><span class="line"><span class="attr">          storage:</span> <span class="number">100</span><span class="string">Gi</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>在该StatefulSet的定义中包括两个容器：mongo和mongo-sidecar。mongo是主服务程序，mongo-sidecar是将多个mongo实例进行集群设置的工具。mongo-sidecar中的环境变量如下
-<ul>
-<li><code>MONGO_SIDECAR_POD_LABELS</code>：设置为mongo容器的标签，用于sidecar查询它所要管理的MongoDB集群实例</li>
-<li><code>KUBERNETES_MONGO_SERVICE_NAME</code>：它的值为mongo，表示sidecar将使用mongo这个服务名来完成MongoDB集群的设置</li>
-</ul>
-</li>
-<li><code>volumeClaimTemplates</code>是StatefulSet最重要的存储设置。在<code>annotations</code>段设置<code>volume.beta.kubernetes.io/storage-class=&quot;fast&quot;</code>表示使用名为fast的StorageClass自动为每个mongo Pod实例分配后端存储。<code>resources.requests.storage</code>=100Gi表示为每个mongo实例都分配100GiB的磁盘空间</li>
-</ul>
-<p>最终可以看到StatefulSet依次创建并启动了3个mongo Pod实例，它们的名字依次为mongo-0、mongo-1、mongo-2,<br>
-StatefulSet会用volumeClaimTemplates中的定义为每个Pod副本都创建一个PVC实例，每个PVC的名称由StatefulSet定义中volumeClaimTemplates的名称和Pod副本的名称组合而成，查看系统中的PVC，可以验证这一点</p>
-<h2 id="查看mongodb集群状态">查看mongodb集群状态</h2>
-<p>登录任意一个mongo Pod，在mongo命令行界面用rs.status()命令查看MongoDB集群的状态，可以看到mongo集群已通过sidecar完成了创建。在集群中包含3个节点，每个节点的名称都是StatefulSet设置的DNS域名格式的网络标识名称：</p>
-<ul>
-<li>mongo-0.mongo.default.svc.cluster.local</li>
-<li>mongo-1.mongo.default.svc.cluster.local</li>
-<li>mongo-2.mongo.default.svc.cluster.local<br>
-同时，可以看到3个mongo实例各自的角色（PRIMARY或SECONDARY）也都进行了正确的设置<br>
-<img src="/img/mongodbcluster.jpg" alt="同时，可以看到3个mongo实例各自的角色（PRIMARY或SECONDARY）也都进行了正确的设置"><br>
-<img src="/img/mongodbcluster2.jpg" alt="2"><br>
-<img src="/img/mongodbcluster3.jpg" alt="3"></li>
-</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">kubernetes.io/ingress.class:</span> <span class="string">test</span></span><br><span class="line">    <span class="comment"># 当认证的时候显示一个合适的上下文信息</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/auth-realm:</span> <span class="string">Authentication</span> <span class="string">Required</span> <span class="bullet">-</span> <span class="string">admin</span></span><br><span class="line">    <span class="comment"># 包含 user/password 的 Secret 名称</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/auth-secret:</span> <span class="string">flink-auth</span></span><br><span class="line">    <span class="comment"># 认证类型</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/auth-type:</span> <span class="string">basic</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/service-weight:</span> <span class="string">""</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">flink</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">test</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - host:</span> <span class="string">flink2.ccccc.co</span></span><br><span class="line"><span class="attr">    http:</span></span><br><span class="line"><span class="attr">      paths:</span></span><br><span class="line"><span class="attr">      - backend:</span></span><br><span class="line"><span class="attr">          serviceName:</span> <span class="string">flink-jobmanager</span></span><br><span class="line"><span class="attr">          servicePort:</span> <span class="number">8081</span></span><br><span class="line"><span class="attr">        path:</span> <span class="string">/</span></span><br></pre></td></tr></table></figure>
+<p>部署成功后访问的时候就会弹出来这个<br>
+<img src="/img/basic.jpg" alt="成功之后如下"></p>
 
                 
 
@@ -272,13 +242,9 @@ StatefulSet会用volumeClaimTemplates中的定义为每个Pod副本都创建一�
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/article/保护对外暴露的kubernetes服务/" data-toggle="tooltip" data-placement="top" title="保护对外暴露的kubernetes服务">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/article/深入浅出pod使用（三）/" data-toggle="tooltip" data-placement="top" title="深入浅出pod使用（三）">Next Post &rarr;</a>
+                            <a href="/article/StatefulSet搭建mongoDB/" data-toggle="tooltip" data-placement="top" title="StatefulSet搭建mongoDB">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -323,12 +289,18 @@ StatefulSet会用volumeClaimTemplates中的定义为每个Pod副本都创建一�
             <!-- Table of Contents -->
 
   
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
     
       <aside id="sidebar">
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#使用sts部署集群mongodb"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x4F7F;&#x7528;sts&#x90E8;&#x7F72;&#x96C6;&#x7FA4;mongodb</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#查看mongodb集群状态"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x67E5;&#x770B;mongodb&#x96C6;&#x7FA4;&#x72B6;&#x6001;</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#basic-auth认证"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">basic auth&#x8BA4;&#x8BC1;</span></a></li></ol>
         
         </div>
       </aside>
@@ -348,7 +320,11 @@ StatefulSet会用volumeClaimTemplates中的定义为每个Pod副本都创建一�
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#kubernetes权威指南" title="kubernetes权威指南">kubernetes权威指南</a>
+                          <a class="tag" href="/tags/#ingress" title="ingress">ingress</a>
+                        
+                          <a class="tag" href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
+                        
+                          <a class="tag" href="/tags/#work" title="work">work</a>
                         
                     </div>
                 </section>

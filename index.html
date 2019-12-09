@@ -141,14 +141,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -208,6 +208,47 @@
             
                 <!-- Main Content -->
 
+
+<div class="post-preview">
+
+    <a href="/article/保护对外暴露的kubernetes服务/">
+        <h2 class="post-title">
+                                 
+            保护对外暴露的kubernetes服务
+        </h2>
+        <h3 class="post-subtitle">
+            使用basic auth认证进行服务对保护
+        </h3>
+        <div class="post-content-preview">
+            
+我们在使用kubernetes经常会暴露一些没有安全验证机制的服务，我们想通过域名进行访问的时候就带有安全机制本文就讲介绍一下kubernetes的认证
+
+basic auth认证
+首先要创建一个储存用户名和密码的htpasswd文件：
+
+如果没有安装工具先使用yum install httpd安装一下
+
+12$ htpasswd -bc auth admin 123456Adding p......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by 陈俊 on
+            2019-12-09
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#ingress" title="ingress">ingress</a>
+            
+              <a href="/tags/#kubernetes" title="kubernetes">kubernetes</a>
+            
+              <a href="/tags/#work" title="work">work</a>
+            
+        </div>
+    
+
+</div>
+<hr>
 
 <div class="post-preview">
 
@@ -469,6 +510,12 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
             <a href="/tags/#Hexo" title="Hexo" rel="2">Hexo</a>
             
         
+            
+        
+            
+        
+            
+        
     </div>
 </section>
 
@@ -522,6 +569,10 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
     <ul>
       
         <li>
+          <a href="/article/保护对外暴露的kubernetes服务/">保护对外暴露的kubernetes服务</a>
+        </li>
+      
+        <li>
           <a href="/article/StatefulSet搭建mongoDB/">StatefulSet搭建mongoDB</a>
         </li>
       
@@ -535,10 +586,6 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
       
         <li>
           <a href="/article/深入浅出pod使用（一）/">深入浅出pod使用（一）</a>
-        </li>
-      
-        <li>
-          <a href="/article/二进制部署kubernetes（一）/">二进制部署kubernetes（一）</a>
         </li>
       
     </ul>
@@ -565,7 +612,7 @@ ingress我认为可以视为一个魔改的nginx，拥有集群赋予的RBAC权�
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a><span class="archive-list-count">2</span></li></ul>
     </div>
 
         <hr>

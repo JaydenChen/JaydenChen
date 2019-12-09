@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>https://jaydenchen.github.io/article/%E4%BF%9D%E6%8A%A4%E5%AF%B9%E5%A4%96%E6%9A%B4%E9%9C%B2%E7%9A%84kubernetes%E6%9C%8D%E5%8A%A1/</loc>
+        <lastmod>2019-12-09T09:52:29.056Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://jaydenchen.github.io/article/StatefulSet%E6%90%AD%E5%BB%BAmongoDB/</loc>
         <lastmod>2019-11-16T04:32:01.558Z</lastmod>
         <changefreq>weekly</changefreq>
