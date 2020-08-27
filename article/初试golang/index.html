@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          初试golang - 陈俊 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="https://jaydenchen.github.io/article/初试golang/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                        </div>
+                        <h1>初试golang</h1>
+                        <h2 class="subheading">go初试-指数推送</h2>
+                        <span class="meta">
+                            Posted by 陈俊 on
+                            2020-08-27
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jayden Chen</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <blockquote>
+<p>之前一直想了解golang，终于有机会实操了踩了很多坑，直接上干货了,本文并将附上k8s编排</p>
+</blockquote>
+<h2 id="需求">需求</h2>
+<p>接收第三方的指数ws进行json处理，然后通过zmq发送给c++程序</p>
+<h3 id="golang代码">golang代码</h3>
+<p>直接上代码了<code>cline.go</code></p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"context"</span></span><br><span class="line">	<span class="string">"encoding/json"</span></span><br><span class="line">	<span class="string">"flag"</span></span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"github.com/go-redis/redis/v8"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">	<span class="string">"math"</span></span><br><span class="line">	<span class="string">"net/url"</span></span><br><span class="line">	<span class="string">"os"</span></span><br><span class="line">	<span class="string">"os/signal"</span></span><br><span class="line">	<span class="string">"strconv"</span></span><br><span class="line">	<span class="string">"strings"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line"></span><br><span class="line">	<span class="string">"github.com/gorilla/websocket"</span></span><br><span class="line">	zmq <span class="string">"github.com/pebbe/zmq4/draft"</span></span><br><span class="line">	<span class="string">"gopkg.in/ini.v1"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Data <span class="keyword">struct</span> &#123;</span><br><span class="line">	BtcPrice      <span class="keyword">float64</span> <span class="string">`json:"btc_price"`</span></span><br><span class="line">	BtcPrice5min  <span class="keyword">float64</span> <span class="string">`json:"btc_price_5min"`</span></span><br><span class="line">	GoldPrice     <span class="keyword">float64</span> <span class="string">`json:"gold_price"`</span></span><br><span class="line">	GoldPrice5min <span class="keyword">float64</span> <span class="string">`json:"gold_price_5min"`</span></span><br><span class="line">	Index         <span class="keyword">float64</span> <span class="string">`json:"index"`</span></span><br><span class="line">	Timestamp     <span class="keyword">int</span>     <span class="string">`json:"timestamp"`</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> ZBGIndex <span class="keyword">struct</span> &#123;</span><br><span class="line">	Action     <span class="keyword">string</span> <span class="string">`json:"action"`</span></span><br><span class="line">	Data       <span class="keyword">string</span> <span class="string">`json:"data"`</span></span><br><span class="line">	Message    <span class="keyword">string</span> <span class="string">`json:"message"`</span></span><br><span class="line">	StatusCode <span class="keyword">int</span>    <span class="string">`json:"statusCode"`</span></span><br><span class="line">	Timestamp  <span class="keyword">int</span>    <span class="string">`json:"timestamp"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> sendIndex <span class="keyword">struct</span> &#123;</span><br><span class="line">	MessageType  <span class="keyword">int</span>     <span class="string">`json:"message_type"`</span></span><br><span class="line">	ApplId       <span class="keyword">int</span>     <span class="string">`json:"appl_id"`</span></span><br><span class="line">	UnderlyingId <span class="keyword">string</span>  <span class="string">`json:"underlying_id"`</span></span><br><span class="line">	IndexPrice   *<span class="keyword">string</span> <span class="string">`json:"index_price"`</span></span><br><span class="line">	MarketId     <span class="keyword">string</span>  <span class="string">`json:"market_id"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> socketHead <span class="keyword">struct</span> &#123;</span><br><span class="line">	updateTime <span class="keyword">int64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	update        socketHead</span><br><span class="line">	messageAll    ZBGIndex</span><br><span class="line">	messageData   Data</span><br><span class="line">	socketHost    <span class="keyword">string</span></span><br><span class="line">	path          <span class="keyword">string</span></span><br><span class="line">	underlyingId  <span class="keyword">string</span></span><br><span class="line">	zmqHost       <span class="keyword">string</span></span><br><span class="line">	timeOut       <span class="keyword">int64</span></span><br><span class="line">	redisHost     <span class="keyword">string</span></span><br><span class="line">	redisPassWord <span class="keyword">string</span></span><br><span class="line">	redisDB       <span class="keyword">int</span></span><br><span class="line">	chainextId    <span class="keyword">string</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	cfg, err := ini.Load(<span class="string">"conf.ini"</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(<span class="string">"Fail to read file: "</span>, err)</span><br><span class="line">		os.Exit(<span class="number">1</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	socketHost = cfg.Section(<span class="string">"websocket"</span>).Key(<span class="string">"host"</span>).String()</span><br><span class="line">	path = cfg.Section(<span class="string">"websocket"</span>).Key(<span class="string">"path"</span>).String()</span><br><span class="line">	underlyingId = cfg.Section(<span class="string">"index"</span>).Key(<span class="string">"underlyingId"</span>).String()</span><br><span class="line">	chainextId = cfg.Section(<span class="string">"index"</span>).Key(<span class="string">"chainextId"</span>).String()</span><br><span class="line">	zmqHost = cfg.Section(<span class="string">"zmq"</span>).Key(<span class="string">"host"</span>).String()</span><br><span class="line">	timeOut, _ = cfg.Section(<span class="string">"websocket"</span>).Key(<span class="string">"timeout"</span>).Int64()</span><br><span class="line">	redisHost = cfg.Section(<span class="string">"redis"</span>).Key(<span class="string">"host"</span>).String()</span><br><span class="line">	redisPassWord = cfg.Section(<span class="string">"redis"</span>).Key(<span class="string">"password"</span>).String()</span><br><span class="line">	redisDB, _ = cfg.Section(<span class="string">"redis"</span>).Key(<span class="string">"db"</span>).Int()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sendMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]*<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> deleteTxt(<span class="string">"health.txt"</span>)</span><br><span class="line">	createTxt(<span class="string">"health.txt"</span>)</span><br><span class="line">	<span class="keyword">var</span> addr = flag.String(<span class="string">"addr"</span>, socketHost, <span class="string">"http service address"</span>)</span><br><span class="line">	u := url.URL&#123;Scheme: <span class="string">"ws"</span>, Host: *addr, Path: path&#125;</span><br><span class="line">	log.Printf(<span class="string">"connecting to %s"</span>, u.String())</span><br><span class="line">	done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	first := <span class="literal">true</span></span><br><span class="line">	<span class="comment">//连接zmq</span></span><br><span class="line">	worker, _ := zmq.NewSocket(zmq.DEALER)</span><br><span class="line">	<span class="keyword">defer</span> worker.Close()</span><br><span class="line">	<span class="comment">//连接ws</span></span><br><span class="line">	c, _, err := websocket.DefaultDialer.Dial(u.String(), <span class="literal">nil</span>)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"dial:"</span>, err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//连接redis</span></span><br><span class="line">	clientRedis := redis.NewClient(&amp;redis.Options&#123;</span><br><span class="line">		Addr:     redisHost,</span><br><span class="line">		Password: redisPassWord, <span class="comment">// no password set</span></span><br><span class="line">		DB:       redisDB,       <span class="comment">// use default DB</span></span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">var</span> ctx = context.Background()</span><br><span class="line">	<span class="keyword">if</span> pong, err := clientRedis.Ping(ctx).Result(); pong != <span class="string">"PONG"</span> || err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"客户端连接redis服务端失败"</span>, err)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">"客户端已成功连接至redis服务端"</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	log.Println(zmqHost)</span><br><span class="line">	<span class="keyword">if</span> err := worker.Connect(zmqHost); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	flag.Parse()</span><br><span class="line">	log.SetFlags(log.Lshortfile | log.LstdFlags)</span><br><span class="line">	interrupt := <span class="built_in">make</span>(<span class="keyword">chan</span> os.Signal, <span class="number">1</span>)</span><br><span class="line">	signal.Notify(interrupt, os.Interrupt)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> c.Close()</span><br><span class="line">	tick := time.Tick(<span class="number">2</span> * time.Second)</span><br><span class="line">	sendTick := time.Tick(<span class="number">1</span> * time.Second)</span><br><span class="line">	<span class="comment">//第一次上市写入redis定时器</span></span><br><span class="line">	planTime := time.Tick(<span class="number">60</span> * time.Second)</span><br><span class="line">	<span class="comment">//测试</span></span><br><span class="line">	<span class="comment">//killTime := time.Tick(120 * time.Second)</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> &lt;-tick:</span><br><span class="line">				heartBeat(timeOut, &amp;first, c)</span><br><span class="line">			<span class="keyword">case</span> &lt;-planTime:</span><br><span class="line">				clientRedis.Set(ctx, <span class="string">"exprice_"</span>+chainextId, sendMap[<span class="string">"IndexPrice"</span>], <span class="number">0</span>)</span><br><span class="line">				log.Println(<span class="string">"exprice_"</span> + chainextId)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="comment">//接收的携程</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">defer</span> <span class="built_in">close</span>(done)</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			_, message, err := c.ReadMessage()</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				errPrint(err, <span class="string">"read Socket"</span>)</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">			log.Println(<span class="keyword">string</span>(message))</span><br><span class="line">			errPrint(err, <span class="string">"read Socket"</span>)</span><br><span class="line">			<span class="comment">//解析message</span></span><br><span class="line">			err = json.Unmarshal(message, &amp;messageAll)</span><br><span class="line">			errPrint(err, <span class="string">"json Unmarshal"</span>)</span><br><span class="line">			<span class="comment">//解析data</span></span><br><span class="line">			strData := []<span class="keyword">byte</span>(messageAll.Data)</span><br><span class="line">			json.Unmarshal(strData, &amp;messageData)</span><br><span class="line">			<span class="keyword">if</span> strings.EqualFold(messageAll.Action, <span class="string">"update"</span>) &#123;</span><br><span class="line">				saveMap(sendMap)</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				log.Println(messageAll.Message)</span><br><span class="line">				update.updateTime = time.Now().Unix()</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">var</span> sendMatch sendIndex</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> &lt;-sendTick:</span><br><span class="line">				sendJson := socketIndex(sendMap, sendMatch)</span><br><span class="line">				intSend, err := worker.Send(sendJson, <span class="number">0</span>)</span><br><span class="line">				<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">					log.Println(<span class="string">"发送出错了"</span>, err)</span><br><span class="line">				&#125;</span><br><span class="line">				log.Println(sendJson)</span><br><span class="line">				log.Println(intSend)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">select</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> &lt;-done:</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		<span class="keyword">case</span> &lt;-interrupt:</span><br><span class="line">			log.Println(<span class="string">"interrupt"</span>)</span><br><span class="line">			closeSocket(c)</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> &lt;-done:</span><br><span class="line">			<span class="keyword">case</span> &lt;-time.After(time.Second):</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//心跳方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">heartBeat</span><span class="params">(num <span class="keyword">int64</span>, first *<span class="keyword">bool</span>, c *websocket.Conn)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> *first &#123;</span><br><span class="line">		*first = <span class="literal">false</span></span><br><span class="line">		update.updateTime = time.Now().Unix()</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> time.Now().Unix()-update.updateTime &gt; num &#123;</span><br><span class="line">		closeSocket(c)</span><br><span class="line">		fmt.Println(<span class="string">"time out"</span>)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		fmt.Println(<span class="string">"heart check"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//关闭socket方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">closeSocket</span><span class="params">(c *websocket.Conn)</span></span> &#123;</span><br><span class="line">	err := c.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, <span class="string">""</span>))</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(<span class="string">"socket close:"</span>, err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//处理json方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">saveMap</span><span class="params">(sendMap <span class="keyword">map</span>[<span class="keyword">string</span>]*<span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	mathIndex := (messageData.Index) * (math.Pow10(<span class="number">18</span>))</span><br><span class="line">	mathIndexString := strconv.FormatFloat(mathIndex, <span class="string">'f'</span>, <span class="number">-1</span>, <span class="number">64</span>)</span><br><span class="line">	sendMap[<span class="string">"IndexPrice"</span>] = &amp;mathIndexString</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//异常处理方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">errPrint</span><span class="params">(err error, factor <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err, <span class="string">"from"</span>, factor)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//发送方法</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">socketIndex</span><span class="params">(sendMap <span class="keyword">map</span>[<span class="keyword">string</span>]*<span class="keyword">string</span>, sendMatch sendIndex)</span> <span class="params">(result <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	sendMatch.MarketId = <span class="string">""</span></span><br><span class="line">	sendMatch.MessageType = <span class="number">5008</span></span><br><span class="line">	sendMatch.ApplId = <span class="number">2</span></span><br><span class="line">	sendMatch.UnderlyingId = underlyingId</span><br><span class="line">	sendMatch.IndexPrice = sendMap[<span class="string">"IndexPrice"</span>]</span><br><span class="line">	body, err := json.Marshal(sendMatch)</span><br><span class="line">	errPrint(err, <span class="string">"json Marsha"</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">string</span>(body)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建文本文件</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">createTxt</span><span class="params">(txtName <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	log.Println(<span class="string">"创建心跳检测文件"</span>)</span><br><span class="line">	<span class="keyword">if</span> _, err := os.Create(txtName); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除文本</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deleteTxt</span><span class="params">(txtName <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> err := os.Remove(txtName); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		log.Println(err)</span><br><span class="line">	&#125;</span><br><span class="line">	log.Println(<span class="string">"删除文件"</span>)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置文件<code>conf.ini</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[websocket]</span><br><span class="line">host = 13.212.29.195</span><br><span class="line">path = /index</span><br><span class="line">timeout =10</span><br><span class="line"></span><br><span class="line">[index]</span><br><span class="line">underlyingId = 1111-1</span><br><span class="line">chainextId = 1111</span><br><span class="line"></span><br><span class="line">[zmq]</span><br><span class="line">host = tcp://127.0.0.1:20060</span><br><span class="line"></span><br><span class="line">[redis]</span><br><span class="line">host = 127.0.0.1:6379</span><br><span class="line">password = qwertyu</span><br><span class="line">db = 0</span><br></pre></td></tr></table></figure>
+<h3 id="编排">编排</h3>
+<p><code>StatefulSet</code></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">newcoin-zbg-index-server-pro</span></span><br><span class="line"><span class="attr">    version:</span> <span class="string">green</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">newcoin-zbg-index-server-pro</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">green</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  revisionHistoryLimit:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">newcoin-zbg-index-server-pro</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">green</span></span><br><span class="line"><span class="attr">  serviceName:</span> <span class="string">newcoin-zbg-index-server-pro</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      affinity:</span></span><br><span class="line"><span class="attr">        nodeAffinity:</span></span><br><span class="line"><span class="attr">          requiredDuringSchedulingIgnoredDuringExecution:</span></span><br><span class="line"><span class="attr">            nodeSelectorTerms:</span></span><br><span class="line"><span class="attr">            - matchExpressions:</span></span><br><span class="line"><span class="attr">              - key:</span> <span class="string">env</span></span><br><span class="line"><span class="attr">                operator:</span> <span class="string">In</span></span><br><span class="line"><span class="attr">                values:</span></span><br><span class="line"><span class="bullet">                -</span> <span class="string">pro</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - args:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="bullet">-c</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">cd</span> <span class="string">/opt/;</span>  <span class="string">./zbg.index</span></span><br><span class="line"><span class="attr">        command:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">/bin/sh</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">registry-vpc.ap-southeast-1.aliyuncs.com/ccfox/newcoin-zbg-index-server-pro:green</span></span><br><span class="line"><span class="attr">        imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">        livenessProbe:</span></span><br><span class="line"><span class="attr">          exec:</span></span><br><span class="line"><span class="attr">            command:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">/bin/sh</span></span><br><span class="line"><span class="bullet">            -</span> <span class="bullet">-c</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">cat</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">/opt/health.txt</span></span><br><span class="line"><span class="attr">          failureThreshold:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">          initialDelaySeconds:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">          periodSeconds:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">          successThreshold:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">          timeoutSeconds:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">newcoin-zbg-index-server-pro</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">8011</span></span><br><span class="line"><span class="attr">          name:</span> <span class="string">http</span></span><br><span class="line"><span class="attr">          protocol:</span> <span class="string">TCP</span></span><br><span class="line"><span class="attr">        resources:</span></span><br><span class="line"><span class="attr">          limits:</span></span><br><span class="line"><span class="attr">            cpu:</span> <span class="string">"2"</span></span><br><span class="line"><span class="attr">            memory:</span> <span class="number">400</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">          requests:</span></span><br><span class="line"><span class="attr">            cpu:</span> <span class="string">"1"</span></span><br><span class="line"><span class="attr">            memory:</span> <span class="number">200</span><span class="string">Mi</span></span><br></pre></td></tr></table></figure>
+<h2 id="遇到的坑">遇到的坑</h2>
+<p>因为zmq使用了c++的库所以不管是打包还是发送zmq都必须要安装c的zmq库所以必须使用脚手架进行打包<br>
+可以使用docker进行打包dockerfile如下</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> golang:<span class="number">1.14</span>.<span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span> apt update &amp;&amp; \</span><br><span class="line">    apt install -y gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf binutils-arm-linux-gnueabihf</span><br><span class="line"># golang image already includes gcc g++ make pkg-config git</span><br><span class="line"></span><br><span class="line">WORKDIR /home</span><br><span class="line"></span><br><span class="line">ARG ZEROMQ_VER=4.3.2</span><br><span class="line">LABEL ZEROMQ_VER=$ZEROMQ_VER</span><br><span class="line"># Download and extract zeromq</span><br><span class="line">ADD https://github.com/zeromq/libzmq/releases/download/v$&#123;ZEROMQ_VER&#125;/zeromq-$&#123;ZEROMQ_VER&#125;.tar.gz .</span><br><span class="line">RUN tar xf zeromq-$&#123;ZEROMQ_VER&#125;.tar.gz</span><br><span class="line">RUN rm zeromq-$&#123;ZEROMQ_VER&#125;.tar.gz</span><br><span class="line"># Configure and install zeromq</span><br><span class="line">WORKDIR zeromq-$&#123;ZEROMQ_VER&#125;</span><br><span class="line">RUN ./configure --enable-drafts</span><br><span class="line">RUN make</span><br><span class="line">RUN make install</span><br><span class="line"></span><br><span class="line"># Setup the compilation environment</span><br><span class="line">WORKDIR /home</span><br><span class="line">ENV CGO_CPPFLAGS="-I/usr/include"</span><br><span class="line">ENV CGO_LDFLAGS="-L/usr/lib -lzmq -lpthread -lrt -lstdc++ -lm -lc -lgcc"</span><br><span class="line">ENV PKG_CONFIG_PATH="/usr/local/lib/pkßgconfig"</span><br><span class="line">ENV CGO_ENABLED=0</span><br><span class="line">ENV GOOS=linux</span><br><span class="line">ENV GOARCH=amd64</span><br><span class="line"></span><br><span class="line">VOLUME /home</span><br><span class="line">ENTRYPOINT ["go", "build", "-v", "--ldflags", "-extldflags '-static'"]</span><br></pre></td></tr></table></figure>
+<p>使用方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">进入到main包的位置</span><br><span class="line">docker run --rm -v $(pwd):/home farshidtz/zmq4-arm</span><br></pre></td></tr></table></figure>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/保护对外暴露的kubernetes服务/" data-toggle="tooltip" data-placement="top" title="保护对外暴露的kubernetes服务">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+  
+    <style>
+      span.toc-nav-number{
+        display: none
+      }
+    </style>
+  
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#需求"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">&#x9700;&#x6C42;</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#golang代码"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">golang&#x4EE3;&#x7801;</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#编排"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">&#x7F16;&#x6392;</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#遇到的坑"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">&#x9047;&#x5230;&#x7684;&#x5751;</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://www.baidu.com" target="_blank">百度</a></li>
+                    
+                        <li><a href="http://www.google.com" target="_blank">谷歌</a></li>
+                    
+                        <li><a href="https://www.ccfox.com" target="_blank">ccfox</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenjun">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 陈俊 2020 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://jaydenchen.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="https://jaydenchen.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
